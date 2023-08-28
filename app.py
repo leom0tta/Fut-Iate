@@ -4,8 +4,8 @@ import streamlit as st
 
 st.set_page_config(
     layout="wide",
-    page_title = 'UK - CPI',
-    page_icon='https://gapasset.com.br/favicon.ico')
+    page_title = 'Fut Iate',
+    page_icon='https://www.icrj.com.br/iate/images/logo/logo60.png')
     
 st.markdown("""
     <style>
@@ -63,4 +63,5 @@ sheet_id = '12_kJDzA7pdejayJ6Hs7tsxJ7ieaUV4-vQ7coBE1BeEM'
 sheet_name = 'Ranking'
 
 url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-pd.read_csv(url)
+dados = pd.read_csv(url)
+
