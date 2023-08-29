@@ -134,13 +134,16 @@ def head2head(dados, person1, person2, metrica):
     person1_db = dados[dados['NOME'] == person1]
     person2_db = dados[dados['NOME'] == person2]
     
-    if (person2_db[metrica].sum() < person1_db[metrica].sum()):
-        st.markdown(f"**{metrica.title()}:\n {person1.title()} | {person1_db[metrica].sum()} :crown:**")
+    person2_ratio = person2_db[metrica].sum()/person2_db.PRESENÇA.sum()
+    person1_ratio = person1_db[metrica].sum()/person2_db.PRESENÇA.sum()
 
-    elif (person2_db[metrica].sum() > person1_db[metrica].sum()):
-        st.markdown(f"**{metrica.title()}:\n {person2.title()} | {person2_db[metrica].sum()} :crown:**")
+    if (person2_ratio < person1_ratio):
+        st.markdown(f"**{metrica.title()}:\n {person1.title()} | {person1_db[metrica].sum()} {metrica} em {person1_db['PRESENÇA'].sum()} jogo(s) :crown:**")
 
-    elif (person2_db[metrica].sum() == person1_db[metrica].sum()):
+    elif (person2_ratio > person1_ratio):
+        st.markdown(f"**{metrica.title()}:\n {person2.title()} | {person2_db[metrica].sum()} {metrica} em {person2_db['PRESENÇA'].sum()} jogo(s) :crown:**")
+
+    elif (person2_ratio == person1_ratio):
         st.markdown(f"**{metrica.title()}:\n EMPATE**")
 
 def RankingTotal (dados, pesoGols, pesoAssists, pesoPresença):
@@ -150,7 +153,7 @@ def RankingTotal (dados, pesoGols, pesoAssists, pesoPresença):
         st.error('Pesos não somam 1')
     else:
         
-        result = dados.groupby('NOME').apply(lambda x: x.GOLS.sum()*pesoGols + x.PRESENÇA.sum()*pesoAssists + x.ASSISTÊNCIAS.sum()*pesoPresença).sort_values(ascending=False)
+        result = dados.groupby('NOME').apply(lambda x: (x.GOLS.sum()/x.PRESENÇA.sum())*pesoGols + x.PRESENÇA.sum()*pesoAssists + (x.ASSISTÊNCIAS.sum()/x.PRESENÇA.sum())*pesoPresença).sort_values(ascending=False)
         
         result = result.to_frame().reset_index()
         
@@ -205,6 +208,15 @@ with st.sidebar:
                 
     with st.expander('# Seletor de Times'):
         st.markdown("## Usando Stable Matching de Gale-Shapley :computer:")
-        stable_matching(ranking)
+        with st.form(key="Gale-Shapley"):
+            submit_stable = st.form_submit_button(label="Bater Time")
+            if(submit_stable):
+                stable_matching(ranking)
+            
         st.markdown("## Random Selector :1234:")
-        form_random_teams_with_substitutes(ranking)
+        with st.form(key="Random"):
+
+            submit_random = st.form_submit_button(label="Time Random")
+            if(submit_random):
+                
+                form_random_teams_with_substitutes(ranking)
