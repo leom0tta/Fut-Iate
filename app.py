@@ -55,6 +55,12 @@ st.markdown("""
         
     }
     
+    tr {
+        
+        font-size: 16px;
+        color: white;
+    }
+    
     h2 {text-align: center;}
     </style>
     """, unsafe_allow_html=True)
@@ -66,7 +72,7 @@ url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sh
 dados = pd.read_csv(url)
 
 st.markdown(
-    "# Fut Iate Rankings :crown: :trophy:"
+    "# Fut Iate :crown: :trophy:"
 )
 
 def head2head(dados, person1, person2, metrica):
@@ -83,7 +89,39 @@ def head2head(dados, person1, person2, metrica):
     elif (person2_db[metrica].sum() == person1_db[metrica].sum()):
         st.markdown(f"**{metrica.title()}: EMPATE**")
 
+def RankingTotal (dados):
+    
+    result = dados.groupby('NOME').apply(lambda x: x.GOLS.sum()*0.5 + x.PRESENÇA.sum()*0.1 + x.ASSISTÊNCIAS.sum()*0.4).sort_values(ascending=False)
+    
+    result = result.to_frame().reset_index()
+    
+    result.columns = ['Nome', 'Score']
+    
+    def format_score(score):
+        return f"{score:.2f}"
 
+    result['Posição'] = result.index + 1
+    
+    st.title("All Time Ranking")
+    
+    view = result.style.hide(axis="index")
+    
+    view.set_table_styles([
+    {'selector': "th", 'props': [("font-weight", "bold"), ("text-transform", "capitalize")]},])
+    
+    view.format(lambda x: f"<i title='tooltip'>{x}</i>", 'Posição')
+    
+    cols1, cols2 = st.columns(2)
+    
+    with cols1:
+        st.markdown(view.to_html(), unsafe_allow_html=True)
+    with cols2:
+        st.write("Os pesos usados foram, 50% por Gol;  10% por presença e 40% por Assistência")
+    
+    
+    return()
+
+RankingTotal(dados)
 
 with st.expander("# Head-To-Head"):
     st.markdown("## Head-to-head :rage:")
