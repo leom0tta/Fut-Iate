@@ -55,12 +55,6 @@ st.markdown("""
         
     }
     
-    tr {
-        
-        font-size: 16px;
-        color: white;
-    }
-    
     h2 {text-align: center;}
     </style>
     """, unsafe_allow_html=True)
