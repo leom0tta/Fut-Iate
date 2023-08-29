@@ -153,7 +153,7 @@ def RankingTotal (dados, pesoGols, pesoAssists, pesoPresença):
         st.error('Pesos não somam 1')
     else:
         
-        result = dados.groupby('NOME').apply(lambda x: round((x.GOLS.sum()/x.PRESENÇA.sum())*pesoGols + x.PRESENÇA.sum()*pesoPresença + (x.ASSISTÊNCIAS.sum()/x.PRESENÇA.sum())*pesoAssists),2).sort_values(ascending=False)
+        result = dados.groupby('NOME').apply(lambda x: (x.GOLS.sum()/x.PRESENÇA.sum())*pesoGols + x.PRESENÇA.sum()*pesoPresença + (x.ASSISTÊNCIAS.sum()/x.PRESENÇA.sum())*pesoAssists).sort_values(ascending=False)
         
         result = result.to_frame().reset_index()
         
@@ -170,7 +170,7 @@ def RankingTotal (dados, pesoGols, pesoAssists, pesoPresença):
         result = result[['NOME', 'GOLS', 'ASSISTÊNCIAS', 'PRESENÇA', 'Score', 'Posição']]
         
         result.columns = ['Nome', 'Gols', 'Assistências', 'Presença','Score', 'Posição']
-                
+        result['Score'] = result['Score'].apply(lambda x: round(x, 2))  
         view = result.style.hide(axis="index")
         
         view.set_table_styles([
