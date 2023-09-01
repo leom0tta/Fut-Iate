@@ -1,12 +1,6 @@
 import pandas as pd
 import streamlit as st
 import datetime
-import locale
-
-# Set the locale to Portuguese (Brazil)
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  # Use 'pt_PT.UTF-8' for Portuguese (Portugal)
-
-
 
 st.set_page_config(
     layout="wide",
