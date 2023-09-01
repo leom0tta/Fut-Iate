@@ -1,6 +1,12 @@
 import pandas as pd
 import streamlit as st
 import datetime
+import locale
+
+# Set the locale to Portuguese (Brazil)
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  # Use 'pt_PT.UTF-8' for Portuguese (Portugal)
+
+
 
 st.set_page_config(
     layout="wide",
@@ -154,10 +160,10 @@ def head2head(dados, person1, person2, metrica):
     person1_ratio = person1_db[metrica].sum()/person2_db.PRESENÇA.sum()
 
     if (person2_ratio < person1_ratio):
-        st.markdown(f"**{metrica.title()}:\n {person1.title()} | {person1_db[metrica].sum()} {metrica} em {person1_db['PRESENÇA'].sum()} dia(s) :crown:**")
+        st.markdown(f"**{metrica.title()}:\n {person1.title()} | {person1_db[metrica].sum()} {metrica} em {person1_db['PRESENÇA'].sum()} jogo(s) :crown:**")
 
     elif (person2_ratio > person1_ratio):
-        st.markdown(f"**{metrica.title()}:\n {person2.title()} | {person2_db[metrica].sum()} {metrica} em {person2_db['PRESENÇA'].sum()} dia(s) :crown:**")
+        st.markdown(f"**{metrica.title()}:\n {person2.title()} | {person2_db[metrica].sum()} {metrica} em {person2_db['PRESENÇA'].sum()} jogo(s) :crown:**")
 
     elif (person2_ratio == person1_ratio):
         st.markdown(f"**{metrica.title()}:\n EMPATE**")
@@ -210,10 +216,12 @@ with tab1:
     ranking = RankingTotal(dados,pesoGols,pesoAssistências,pesoPresença)
 
 with tab2:
-    last_date = pd.to_datetime(dados['DATA']).unique()[-1]
-    dateRef = st.date_input('Data de Referência', last_date)
-    st.write(f'Data do último jogo: {last_date}')
+
+    dateRef = st.date_input('Data de Referência', pd.to_datetime(dados['DATA']).unique()[-1])
+    
     dt = dados[dados['DATA'].apply(lambda x: pd.to_datetime(x).month) == dateRef.month]
+    
+    st.write(dateRef.strftime('%B-%Y').title())
     
     col1, col2, col3 = st.columns(3)
     with col1:
