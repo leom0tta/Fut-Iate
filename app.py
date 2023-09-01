@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-
+import datetime
 
 st.set_page_config(
     layout="wide",
@@ -41,11 +41,27 @@ st.markdown("""
         
     }
     
-    .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] {
         font-size:24px;
         text-align: center;
         place-items: center;
 
+    }
+    
+    .css-q8sbsg.eqr7zpz4 {
+        
+        font-size:24px;
+        text-align: center;
+        place-items: center;
+        
+    }
+    
+    .css-10trblm.eqr7zpz0 {
+        
+        font-size:40px;
+        text-align: center;
+        place-items: center;
+        
     }
     
     .css-3mmywe.e15ugz7a0 {
@@ -180,18 +196,38 @@ def RankingTotal (dados, pesoGols, pesoAssists, pesoPresença):
             
         st.markdown(view.to_html(), unsafe_allow_html=True)
         return(result)
-st.title("All Time Ranking")
+tab1, tab2 = st.tabs(['# Ranking All-Time', "# Ranking Mensal"])
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    pesoGols = st.number_input('Peso de Gols', min_value=0.,max_value=1., value = 0.5)
-with col2:
-    pesoAssistências = st.number_input('Peso de Assistências', min_value=0.,max_value=1.,value = 0.4)
-with col3:
-    pesoPresença = st.number_input('Peso de Presença', min_value=0.,max_value=1.,value = 0.1)
+with tab1:
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        pesoGols = st.number_input('Peso de Gols', min_value=0.,max_value=1., value = 0.4)
+    with col2:
+        pesoAssistências = st.number_input('Peso de Assistências', min_value=0.,max_value=1.,value = 0.3)
+    with col3:
+        pesoPresença = st.number_input('Peso de Presença', min_value=0.,max_value=1.,value = 0.3)
+        
+    ranking = RankingTotal(dados,pesoGols,pesoAssistências,pesoPresença)
+
+with tab2:
+
+    dateRef = st.date_input('Data de Referência', pd.to_datetime(dados['DATA']).unique()[-1])
     
-ranking = RankingTotal(dados,pesoGols,pesoAssistências,pesoPresença)
-
+    dt = dados[dados['DATA'].apply(lambda x: pd.to_datetime(x).month) == dateRef.month]
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        pesoGols1 = st.number_input('Peso de Gols - mensal', min_value=0.,max_value=1., value = 0.4)
+    with col2:
+        pesoAssistências2 = st.number_input('Peso de Assistências - mensal', min_value=0.,max_value=1.,value = 0.3)
+    with col3:
+        pesoPresença3 = st.number_input('Peso de Presença - mensal', min_value=0.,max_value=1.,value = 0.3)
+    
+    if (dt.empty):
+        st.error('Ainda não tiveram partidas esse Mês')
+    else:
+        ranking = RankingTotal(dt,pesoGols1,pesoAssistências2,pesoPresença3)
+    
 with st.sidebar:
     with st.expander("# Head-To-Head"):
         st.markdown("## Head-to-head :rage:")
@@ -204,7 +240,6 @@ with st.sidebar:
                 head2head(dados, person1, person2, 'GOLS')
                 head2head(dados, person1, person2, 'PRESENÇA')
                 head2head(dados, person1, person2, 'ASSISTÊNCIAS')
-                head2head(dados, person1, person2, 'MVP')
                 
     with st.expander('# Seletor de Times'):
         st.markdown("## Usando Stable Matching de Gale-Shapley :computer:")
