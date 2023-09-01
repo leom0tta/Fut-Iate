@@ -210,9 +210,9 @@ with tab1:
     ranking = RankingTotal(dados,pesoGols,pesoAssistências,pesoPresença)
 
 with tab2:
-
+    last_date = pd.to_datetime(dados['DATA']).unique()[-1]}
     dateRef = st.date_input('Data de Referência', pd.to_datetime(dados['DATA']).unique()[-1])
-    st.write(f'Data do último jogo: {pd.to_datetime(dados['DATA']).unique()[-1]}')
+    st.write(f'Data do último jogo: {last_date}')
     dt = dados[dados['DATA'].apply(lambda x: pd.to_datetime(x).month) == dateRef.month]
     
     col1, col2, col3 = st.columns(3)
