@@ -212,7 +212,7 @@ with tab1:
 with tab2:
 
     dateRef = st.date_input('Data de Referência', pd.to_datetime(dados['DATA']).unique()[-1])
-    st.write(f'Data de Referência: {dateRef}')
+    st.write(f'Data do último jogo: {pd.to_datetime(dados['DATA']).unique()[-1]}')
     dt = dados[dados['DATA'].apply(lambda x: pd.to_datetime(x).month) == dateRef.month]
     
     col1, col2, col3 = st.columns(3)
