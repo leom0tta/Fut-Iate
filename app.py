@@ -154,10 +154,10 @@ def head2head(dados, person1, person2, metrica):
     person1_ratio = person1_db[metrica].sum()/person2_db.PRESENÇA.sum()
 
     if (person2_ratio < person1_ratio):
-        st.markdown(f"**{metrica.title()}:\n {person1.title()} | {person1_db[metrica].sum()} {metrica} em {person1_db['PRESENÇA'].sum()} jogo(s) :crown:**")
+        st.markdown(f"**{metrica.title()}:\n {person1.title()} | {person1_db[metrica].sum()} {metrica} em {person1_db['PRESENÇA'].sum()} dia(s) :crown:**")
 
     elif (person2_ratio > person1_ratio):
-        st.markdown(f"**{metrica.title()}:\n {person2.title()} | {person2_db[metrica].sum()} {metrica} em {person2_db['PRESENÇA'].sum()} jogo(s) :crown:**")
+        st.markdown(f"**{metrica.title()}:\n {person2.title()} | {person2_db[metrica].sum()} {metrica} em {person2_db['PRESENÇA'].sum()} dia(s) :crown:**")
 
     elif (person2_ratio == person1_ratio):
         st.markdown(f"**{metrica.title()}:\n EMPATE**")
