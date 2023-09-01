@@ -186,7 +186,7 @@ def RankingTotal (dados, pesoGols, pesoAssists, pesoPresença):
         result = result[['NOME', 'GOLS', 'ASSISTÊNCIAS', 'PRESENÇA', 'Score', 'Posição']]
         
         result.columns = ['Nome', 'Gols', 'Assistências', 'Presença','Score', 'Posição']
-        result['Score'] = result['Score'].apply(lambda x: round(x, 2))  
+        result['Score'] = result['Score'].apply(format_score)  
         view = result.style.hide(axis="index")
         
         view.set_table_styles([
