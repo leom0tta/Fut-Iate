@@ -221,7 +221,7 @@ with tab2:
     
     dt = dados[dados['DATA'].apply(lambda x: pd.to_datetime(x).month) == dateRef.month]
     
-    st.write(dateRef.strftime('%B-%Y').title())
+    st.write('Mês de Referência: ', dateRef.strftime('%m-%Y').title())
     
     col1, col2, col3 = st.columns(3)
     with col1:
